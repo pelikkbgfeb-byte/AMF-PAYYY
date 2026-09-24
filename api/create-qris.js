@@ -1,4 +1,4 @@
-const KASERA_API_KEY = 'kp_live_2OvkpbzxuOgD12VgjBxVArtU99ezht5vFywy_le8YFE';
+const KASERA_API_KEY = 'kp_live_oW_ObOY3XcJrtHS_MIStR-dJZ_aKzlVw2LC5yIO25dY';
 const KASERA_URL = 'https://pay.kasera.id/v1/transactions';
 
 export default async function handler(req, res) {

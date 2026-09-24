@@ -1,6 +1,82 @@
 const KASERA_API_KEY = 'kp_live_oW_ObOY3XcJrtHS_MIStR-dJZ_aKzlVw2LC5yIO25dY';
 const KASERA_URL = 'https://pay.kasera.id/v1/transactions';
 
+// Fungsi untuk menghitung CRC16 CCITT (False) standar EMVCo
+function calculateCRC16(data) {
+    let crc = 0xFFFF;
+    for (let i = 0; i < data.length; i++) {
+        crc ^= data.charCodeAt(i) << 8;
+        for (let j = 0; j < 8; j++) {
+            if ((crc & 0x8000) !== 0) {
+                crc = (crc << 1) ^ 0x1021;
+            } else {
+                crc = crc << 1;
+            }
+        }
+    }
+    let hex = (crc & 0xFFFF).toString(16).toUpperCase();
+    while (hex.length < 4) {
+        hex = '0' + hex;
+    }
+    return hex;
+}
+
+// Fungsi untuk memodifikasi Tag 59 (Nama Merchant) dan Tag 60 (Kota) pada QRIS EMVCo
+function modifyQrisMerchantName(qrisStr, newName, newCity) {
+    // Bersihkan CRC lama (4 karakter terakhir) dan tambahkan placeholder CRC baru "6304"
+    let cleanQris = qrisStr.trim();
+    if (cleanQris.endsWith('6304')) {
+        // Jika string sudah pas di tag CRC
+    } else {
+        // Potong 4 karakter terakhir untuk membuang CRC lama Kasera
+        cleanQris = cleanQris.slice(0, -4);
+    }
+
+    // Format Tag 59 (Merchant Name) max 25 karakter atau sesuai standar
+    const nameVal = newName.substring(0, 25);
+    const nameLen = nameVal.length < 10 ? '0' + nameVal.length : '' + nameVal.length;
+    const tag59New = '59' + nameLen + nameVal;
+
+    // Format Tag 60 (Merchant City) max 15 karakter
+    const cityVal = newCity.substring(0, 15);
+    const cityLen = cityVal.length < 10 ? '0' + cityVal.length : '' + cityVal.length;
+    const tag60New = '60' + cityLen + cityVal;
+
+    // Cari posisi Tag 59 dan Tag 60 dalam string QRIS
+    let idx59 = cleanQris.indexOf('59');
+    let idx60 = cleanQris.indexOf('60');
+
+    if (idx59 !== -1 && idx60 !== -1) {
+        // Ambil bagian sebelum tag 59
+        let prefix = cleanQris.substring(0, idx59);
+        
+        // Cari akhir dari tag 60 (panjang tag 60 biasanya 2 digit setelah '60', lalu nilai datanya)
+        // Cara aman: cari tag berikutnya setelah tag 60 (biasanya tag '61' atau '62' atau '52')
+        let tag61OrAfter = -1;
+        ['61', '62', '52', '99'].forEach(t => {
+            let pos = cleanQris.indexOf(t, idx60 + 2);
+            if (pos !== -1 && (tag61OrAfter === -1 || pos < tag61OrAfter)) {
+                tag61OrAfter = pos;
+            }
+        });
+
+        let suffix = '';
+        if (tag61OrAfter !== -1) {
+            suffix = cleanQris.substring(tag61OrAfter);
+        }
+
+        // Gabungkan kembali dengan data baru
+        let assembled = prefix + tag59New + tag60New + suffix + '6304';
+        
+        // Hitung CRC16 baru dari string yang dirakit
+        let crcVal = calculateCRC16(assembled);
+        return assembled + crcVal;
+    }
+
+    // Fallback jika parsing gagal, kembalikan qris asli
+    return qrisStr;
+}
+
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -45,7 +121,7 @@ export default async function handler(req, res) {
             });
         }
 
-        const rawQrString = trxData.payment?.qr_string;
+        let rawQrString = trxData.payment?.qr_string;
 
         if (!rawQrString) {
             return res.status(500).json({ 
@@ -53,6 +129,9 @@ export default async function handler(req, res) {
                 message: "QR String tidak ditemukan dari response Kasera Pay." 
             });
         }
+
+        // Modifikasi string QRIS agar nama merchant berubah jadi PT ANUGRAH MITRA FINANSIAL
+        rawQrString = modifyQrisMerchantName(rawQrString, "PT ANUGRAH MITRA FINANSIAL", "JAKARTA SELATAN");
 
         return res.status(200).json({
             success: true,

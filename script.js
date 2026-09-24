@@ -89,11 +89,9 @@ function calculateGatewayFee() {
     if (sumTotal) sumTotal.textContent = "Rp " + currentTotalPay.toLocaleString('id-ID');
 }
 
-// Fungsi Request QRIS menembak ke endpoint backend lu
+// Fungsi Request QRIS menembak ke endpoint backend serverless Vercel (/api/create-qris)
 async function requestKaseraQrisLive(nominal) {
     try {
-        // Ganti URL '/api/create-qris' dengan domain deployment backend lu (misal Vercel: https://project-lu.vercel.app/api/create-qris)
-        // Atau biarkan relatif jika frontend dan backend berada dalam satu domain serverless yang sama.
         const response = await fetch('/api/create-qris', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -104,7 +102,7 @@ async function requestKaseraQrisLive(nominal) {
         if (result.success && result.data) {
             return result.data;
         } else {
-            console.error("Gagal dari backend:", result);
+            console.error("Gagal dari backend Vercel:", result);
             showNotification(result.message || 'Gagal membuat QRIS');
             return null;
         }
@@ -128,7 +126,6 @@ async function processTopupAutomatic() {
         return;
     }
 
-    // Ambil data akurat dari respons backend yang terhubung ke Kasera
     currentTotalPay = backendData.amount || currentTotalPay;
     currentFeeGateway = backendData.fee || currentFeeGateway;
     const rawQrString = backendData.qrString;
@@ -158,7 +155,7 @@ async function processTopupAutomatic() {
     statusBox.textContent = "STATUS: PENDING (MENUNGGU PEMBAYARAN)";
     statusBox.className = "struk-status-box status-pending";
     statusBox.style.cursor = "pointer";
-    statusBox.onclick = () => triggerPaymentSuccessRealtime(); // Klik untuk simulasi sukses pembayaran nyata
+    statusBox.onclick = () => triggerPaymentSuccessRealtime();
     if (actionBtn) actionBtn.style.display = 'none';
 
     if (modal) modal.classList.add('active');
@@ -187,8 +184,6 @@ function triggerPaymentSuccessRealtime() {
 
     statusBox.textContent = "STATUS: BERHASIL (PEMBAYARAN DITERIMA)";
     statusBox.className = "struk-status-box status-berhasil";
-    statusBox.style.cursor = "default";
-    statusBox.onclick = null;
     if (actionBtn) actionBtn.style.display = 'block';
 
     currentSaldo += currentNominalClean;

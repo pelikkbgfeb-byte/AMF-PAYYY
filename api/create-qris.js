@@ -2,7 +2,6 @@ const KASERA_API_KEY = 'kp_live_2OvkpbzxuOgD12VgjBxVArtU99ezht5vFywy_le8YFE';
 const KASERA_URL = 'https://pay.kasera.id/v1/transactions';
 
 export default async function handler(req, res) {
-    // Header CORS yang bersih dan bener
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -38,9 +37,10 @@ export default async function handler(req, res) {
         const trxData = await kaseraResponse.json();
 
         if (!kaseraResponse.ok) {
+            const errDetail = trxData.message || JSON.stringify(trxData);
             return res.status(kaseraResponse.status).json({
                 success: false,
-                message: "Gagal dari Kasera Pay",
+                message: `Kasera Error: ${errDetail}`,
                 error: trxData
             });
         }

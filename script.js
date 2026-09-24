@@ -16,7 +16,7 @@ function showNotification(message) {
     if (toast && toastMsg) {
         toastMsg.textContent = message;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
+        setTimeout(() => toast.classList.remove('show'), 4000);
     }
 }
 
@@ -89,7 +89,6 @@ function calculateGatewayFee() {
     if (sumTotal) sumTotal.textContent = "Rp " + currentTotalPay.toLocaleString('id-ID');
 }
 
-// Fungsi Request QRIS menembak ke endpoint backend serverless Vercel (/api/create-qris)
 async function requestKaseraQrisLive(nominal) {
     try {
         const response = await fetch('/api/create-qris', {

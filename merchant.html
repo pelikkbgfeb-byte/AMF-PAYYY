@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    <title>AMF PAY - Merchant</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        body.app-body { background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .app-container { width: 100%; max-width: 480px; background: #f8f9fa; min-height: 100vh; height: 100vh; box-shadow: 0 0 30px rgba(0,0,0,0.08); position: relative; display: flex; flex-direction: column; overflow: hidden; }
+        
+        .app-header { background: linear-gradient(135deg, #4e54c8, #8f94fb); color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .user-profile-info { display: flex; align-items: center; gap: 12px; }
+        .avatar-circle { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; }
+        .user-profile-info h3 { font-size: 0.95rem; font-weight: 700; color: #fff; }
+
+        .app-content { padding: 16px; flex-grow: 1; overflow-y: auto; padding-bottom: 90px; }
+
+        .merchant-form-container { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; }
+        .form-title-sec { font-size: 0.95rem; font-weight: 700; color: #4e54c8; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .form-group-app { margin-bottom: 12px; }
+        .form-group-app label { display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 5px; }
+        .form-control-app { width: 100%; padding: 10px 12px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.82rem; color: #1e293b; background: #fff; outline: none; transition: 0.2s; }
+        .form-control-app:focus { border-color: #4e54c8; }
+        
+        .review-banner-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 16px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px; }
+        .review-banner-box i { color: #2563eb; font-size: 1.2rem; margin-top: 2px; }
+        .review-banner-box h4 { font-size: 0.88rem; font-weight: 700; color: #1e40af; margin-bottom: 2px; }
+        .review-banner-box p { font-size: 0.75rem; color: #3b82f6; line-height: 1.4; }
+
+        /* TEMPLATE QRIS RESMI DARI GITHUB */
+        .qris-github-template {
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+            background: #ffffff url('https://raw.githubusercontent.com/razisek/Qris-Dinamis/main/assets/template.png') no-repeat center center;
+            background-size: cover;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            padding: 55px 20px 45px 20px;
+            text-align: center;
+            position: relative;
+            border: 1px solid #e2e8f0;
+        }
+        .qris-store-title { font-size: 1.1rem; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 2px; }
+        .qris-nmid-text { font-size: 0.7rem; font-weight: 600; color: #64748b; letter-spacing: 0.5px; margin-bottom: 18px; }
+        .qris-code-box-inner { background: #ffffff; padding: 12px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.06); border: 1px solid #cbd5e1; margin-bottom: 10px; }
+
+        /* NAVIGASI BAWAH ABSOLUT */
+        .bottom-nav-5 { position: absolute; bottom: 0; left: 0; width: 100%; height: 68px; background: #ffffff; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; z-index: 100; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 0 5px; flex-shrink: 0; }
+        .nav-item-5 { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: #64748b; cursor: pointer; flex: 1; height: 100%; font-size: 0.6rem; font-weight: 600; background: none; border: none; text-decoration: none; }
+        .nav-item-5 i { font-size: 1.05rem; }
+        .nav-item-5.active { color: #4e54c8; }
+        
+        .center-merchant-nav { position: relative; top: -12px; display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
+        .merchant-floating-badge { width: 48px; height: 48px; background: #4e54c8; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; box-shadow: 0 4px 12px rgba(78,84,200,0.4); border: 3px solid #fff; }
+        .merchant-svg-icon { width: 22px; height: 22px; fill: #fff; }
+        .center-merchant-nav span { margin-top: 2px; font-weight: 700; color: #4e54c8; font-size: 0.6rem; }
+
+        .app-notification-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #1e293b; color: #fff; padding: 10px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; z-index: 1000; transition: transform 0.3s ease; font-size: 0.78rem; font-weight: 600; }
+        .app-notification-toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body class="app-body">
+
+    <div class="app-container">
+
+        <header class="app-header">
+            <div class="user-profile-info">
+                <div class="avatar-circle"><i class="fa-solid fa-store"></i></div>
+                <div>
+                    <span style="font-size: 0.75rem; opacity: 0.85; display: block;">Kelola Bisnis</span>
+                    <h3>Pusat Merchant AMF PAY</h3>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-content">
+
+            <!-- KONTEN UTAMA MERCHANT (FORM & QRIS TEMPLATE GITHUB) -->
+            <div id="merchant-unregistered-view">
+                <div class="merchant-form-container">
+                    <div class="form-title-sec"><i class="fa-solid fa-file-pen"></i> Formulir Pendaftaran Merchant</div>
+                    <div class="form-group-app">
+                        <label>Nama Bisnis / Toko</label>
+                        <input type="text" id="reg-nama-toko" class="form-control-app" placeholder="Contoh: Toko Berkah Jaya">
+                    </div>
+                    <div class="form-group-app">
+                        <label>Bidang Usaha</label>
+                        <select id="reg-bidang" class="form-control-app">
+                            <option value="Kuliner & Makanan (F&B)">Kuliner & Makanan (F&B)</option>
+                            <option value="Toko Kelontong & Sembako">Toko Kelontong & Sembako</option>
+                            <option value="Elektronik & Gadget">Elektronik & Gadget</option>
+                            <option value="Fashion & Pakaian">Fashion & Pakaian</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group-app">
+                        <label>Alamat Lengkap</label>
+                        <input type="text" id="reg-alamat" class="form-control-app" placeholder="Masukkan alamat toko">
+                    </div>
+                    <button class="btn-primary-app full-width" onclick="submitMerchantRegistration()" style="width:100%; margin-top:10px; padding:12px; background:#4e54c8; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Daftar & Kirim Tinjauan</button>
+                </div>
+            </div>
+
+            <div id="merchant-registered-view" style="display: none;">
+                <div id="merchant-review-banner" class="review-banner-box" style="display: none;">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <div>
+                        <h4>Akun Dalam Tinjauan 24 Jam</h4>
+                        <p id="review-timer-text">Data profil Anda sedang diverifikasi sistem secara real-time.</p>
+                    </div>
+                </div>
+
+                <!-- TAMPILAN QRIS BER-TEMPLATE GITHUB SETELAH 24 JAM -->
+                <div id="merchant-active-menu" style="display: none;">
+                    <div class="qris-github-template">
+                        <div class="qris-store-title" id="display-store-name">TOKO ANDA</div>
+                        <div class="qris-nmid-text">NMID : ID1026539727622</div>
+                        
+                        <div class="qris-code-box-inner">
+                            <svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="1.5">
+                                <path d="M2 2h8v8H2zM14 2h8v8h-8zM2 14h8v8H2z" fill="#1e293b"/>
+                                <rect x="14" y="14" width="3" height="3" fill="#1e293b"/>
+                                <rect x="19" y="14" width="3" height="3" fill="#1e293b"/>
+                                <rect x="14" y="19" width="3" height="3" fill="#1e293b"/>
+                                <rect x="19" y="19" width="3" height="3" fill="#1e293b"/>
+                                <path d="M6 6h0.01M18 6h0.01M6 18h0.01M12 12h0.01M15 11h2M11 15v2M12 18h2"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary-app full-width" onclick="showNotification('QRIS berhasil dibagikan')" style="width:100%; margin-top:16px; padding:12px; background:#4e54c8; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Bagikan QRIS Resmi</button>
+                </div>
+            </div>
+
+        </main>
+
+        <div id="app-notification" class="app-notification-toast"><i class="fa-solid fa-circle-info"></i><span id="toast-message">Notif</span></div>
+
+        <!-- NAVIGASI BAWAH -->
+        <nav class="bottom-nav-5">
+            <a href="dashboard.html" class="nav-item-5"><i class="fa-solid fa-house"></i><span>Home</span></a>
+            <a href="dashboard.html" class="nav-item-5"><i class="fa-solid fa-receipt"></i><span>Transaksi</span></a>
+            <div class="nav-item-5 center-merchant-nav active" onclick="checkMerchantRealtimeStatus()">
+                <div class="merchant-floating-badge"><svg viewBox="0 0 24 24" class="merchant-svg-icon" fill="currentColor"><path d="M20 4H4v2h16V4m1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1M6 18v-4h6v4H6z"/></svg></div>
+                <span>Merchant</span>
+            </div>
+            <a href="dashboard.html" class="nav-item-5"><i class="fa-solid fa-wallet"></i><span>Isi Saldo</span></a>
+            <a href="dashboard.html" class="nav-item-5"><i class="fa-solid fa-user"></i><span>Profil</span></a>
+        </nav>
+
+    </div>
+
+    <script>
+        function showNotification(msg) {
+            const toast = document.getElementById('app-notification');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function submitMerchantRegistration() {
+            const namaToko = document.getElementById('reg-nama-toko').value.trim();
+            const alamat = document.getElementById('reg-alamat').value.trim();
+            const bidang = document.getElementById('reg-bidang').value;
+
+            if(!namaToko || !alamat) {
+                showNotification('Harap isi Nama Toko dan Alamat dengan lengkap!');
+                return;
+            }
+
+            localStorage.setItem('amf_merchant_store', namaToko);
+            localStorage.setItem('amf_merchant_alamat', alamat);
+            localStorage.setItem('amf_merchant_bidang', bidang);
+            localStorage.setItem('amf_merchant_reg_time', Date.now());
+
+            showNotification('Pendaftaran berhasil! Akun masuk masa tinjauan.');
+            checkMerchantRealtimeStatus();
+        }
+
+        function checkMerchantRealtimeStatus() {
+            const savedStore = localStorage.getItem('amf_merchant_store');
+            const regTime = parseInt(localStorage.getItem('amf_merchant_reg_time')) || 0;
+            const now = Date.now();
+            const twentyFourHours = 24 * 60 * 60 * 1000;
+
+            const unregisteredView = document.getElementById('merchant-unregistered-view');
+            const registeredView = document.getElementById('merchant-registered-view');
+            const reviewBanner = document.getElementById('merchant-review-banner');
+            const activeMenu = document.getElementById('merchant-active-menu');
+
+            if (!savedStore) {
+                unregisteredView.style.display = 'block';
+                registeredView.style.display = 'none';
+            } else {
+                unregisteredView.style.display = 'none';
+                registeredView.style.display = 'block';
+
+                const elapsed = now - regTime;
+                if (elapsed < twentyFourHours) {
+                    reviewBanner.style.display = 'flex';
+                    activeMenu.style.display = 'none';
+
+                    const remainingMs = twentyFourHours - elapsed;
+                    const hoursLeft = Math.floor(remainingMs / (1000 * 60 * 60));
+                    const minsLeft = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    document.getElementById('review-timer-text').textContent = 
+                        `Data diverifikasi. Sisa waktu tinjauan: ${hoursLeft} jam ${minsLeft} menit lagi.`;
+                } else {
+                    reviewBanner.style.display = 'none';
+                    activeMenu.style.display = 'block';
+                    document.getElementById('display-store-name').textContent = savedStore;
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkMerchantRealtimeStatus();
+        });
+
+        setInterval(() => {
+            checkMerchantRealtimeStatus();
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT ANUGRAH MITRA FINANSIAL - Platform PPOP & Layanan Digital Terpercaya</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- HALAMAN: LANDING / BERANDA -->
+    <section id="page-landing" class="page active">
+        <header class="navbar">
+            <div class="logo-container">
+                <!-- Logo SVG Kustom Anti Pop-up -->
+                <svg class="custom-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#4e54c8;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#8f94fb;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="url(#grad1)" />
+                    <circle cx="50" cy="50" r="20" fill="#ffffff" />
+                    <path d="M40 50 L48 58 L62 42" fill="none" stroke="#4e54c8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="brand-text-wrap">
+                    <span class="brand-name">PT ANUGRAH MITRA FINANSIAL</span>
+                    <span class="brand-sub">Official PPOP & Digital Services</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn-outline" onclick="switchPage('page-login')">Masuk</button>
+                <button class="btn-primary" onclick="switchPage('page-register')">Daftar</button>
+            </div>
+        </header>
+
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1>Solusi Keuangan Digital <br><span>Tercepat & Terpercaya</span></h1>
+                <p>Platform resmi PT Anugrah Mitra Finansial untuk kebutuhan e-wallet, top up game, dan optimasi digital dengan kecepatan kilat serta transaksi bergaransi.</p>
+                <button class="btn-primary btn-glow" onclick="switchPage('page-register')">Mulai Transaksi <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+            <!-- Ilusi Gambar Bergerak / Efek Visual -->
+            <div class="hero-visual">
+                <div class="optical-illusion-box">
+                    <div class="ring r1"></div>
+                    <div class="ring r2"></div>
+                    <div class="ring r3"></div>
+                    <div class="center-core"><i class="fa-solid fa-building-columns"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BAGIAN ARTIKEL & INFORMASI TERBARU -->
+        <div class="articles-section">
+            <div class="section-title-center">
+                <h2>Pusat Informasi & Artikel Edukasi</h2>
+                <p>Kumpulan tips, panduan transaksi, dan berita terbaru seputar layanan digital PT Anugrah Mitra Finansial</p>
+            </div>
+            <div class="articles-grid">
+                <div class="article-card">
+                    <div class="article-img i-1"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="article-body">
+                        <span class="article-tag">Keamanan</span>
+                        <h3>Tips Aman Transaksi Top Up E-Wallet Tanpa Khawatir Penipuan</h3>
+                        <p>Kenali fitur keamanan berlapis yang disediakan PT Anugrah Mitra Finansial untuk melindungi setiap saldo Anda...</p>
+                        <a href="#" class="read-more">Baca Selengkapnya <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-img i-2"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="article-body">
+                        <span class="article-tag">Tips Bisnis</span>
+                        <h3>Strategi Memulai Bisnis PPOP Skala Rumahan Modal Minim</h3>
+                        <p>Peluang emas membuka agen pembayaran PPOB dan top up game bersama partner resmi yang terpercaya...</p>
+                        <a href="#" class="read-more">Baca Selengkapnya <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-img i-3"><i class="fa-solid fa-gamepad"></i></div>
+                    <div class="article-body">
+                        <span class="article-tag">Gaming</span>
+                        <h3>Cara Cek ID Game Free Fire & Mobile Legends yang Benar</h3>
+                        <p>Hindari kesalahan input ID saat melakukan top up game favorit Anda agar proses pengiriman diamond instan...</p>
+                        <a href="#" class="read-more">Baca Selengkapnya <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-img i-4"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="article-body">
+                        <span class="article-tag">E-Wallet</span>
+                        <h3>Perbandingan Biaya Admin DANA, OVO, dan Gopay Terbaru</h3>
+                        <p>Ulasan lengkap mengenai rincian potongan biaya admin dan cara memaksimalkan cashback transaksi harian Anda...</p>
+                        <a href="#" class="read-more">Baca Selengkapnya <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-img i-5"><i class="fa-solid fa-bullhorn"></i></div>
+                    <div class="article-body">
+                        <span class="article-tag">Marketing</span>
+                        <h3>Pentingnya Push Kontak & Optimasi Media Sosial untuk Bisnis Online</h3>
+                        <p>Tingkatkan omset penjualan online shop Anda dengan teknik broadcast dan suntik engagement yang aman...</p>
+                        <a href="#" class="read-more">Baca Selengkapnya <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-img i-6"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <div class="article-body">
+                        <span class="article-tag">Legalitas</span>
+                        <h3>Mengenal Legalitas Resmi PT Anugrah Mitra Finansial</h3>
+                        <p>Komitmen kami dalam memberikan layanan finansial digital yang transparan, legal, dan berstandar tinggi...</p>
+                        <a href="#" class="read-more">Baca Selengkapnya <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="landing-footer">
+            <p>&copy; 2026 PT Anugrah Mitra Finansial. All Rights Reserved.</p>
+        </footer>
+    </section>
+
+    <!-- HALAMAN: LOGIN -->
+    <section id="page-login" class="page">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>PT Anugrah Mitra Finansial</h2>
+                <p>Masuk untuk melanjutkan ke dasbor Anda</p>
+                <form onsubmit="handleLogin(event)">
+                    <div class="input-group">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" placeholder="Email Anda" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" placeholder="Kata Sandi" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Masuk</button>
+                </form>
+                <p class="auth-switch">Belum punya akun? <a href="#" onclick="switchPage('page-register')">Daftar</a></p>
+                <button class="btn-back" onclick="switchPage('page-landing')"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- HALAMAN: DAFTAR -->
+    <section id="page-register" class="page">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2>Daftar Akun Baru</h2>
+                <p>Bergabung bersama PT Anugrah Mitra Finansial</p>
+                <form onsubmit="handleRegister(event)">
+                    <div class="input-group">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" placeholder="Nama Lengkap" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" placeholder="Email Aktif" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" placeholder="Buat Kata Sandi" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Daftar</button>
+                </form>
+                <p class="auth-switch">Sudah punya akun? <a href="#" onclick="switchPage('page-login')">Masuk</a></p>
+                <button class="btn-back" onclick="switchPage('page-landing')"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- HALAMAN: DASBOR UTAMA -->
+    <section id="page-dashboard" class="page">
+        <div class="dashboard-layout">
+            <!-- Sidebar Navigasi -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <svg class="custom-logo-svg small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="url(#grad1)" />
+                        <circle cx="50" cy="50" r="20" fill="#ffffff" />
+                    </svg>
+                    <span>AMF DASHBOARD</span>
+                </div>
+                <ul class="sidebar-menu">
+                    <li class="active" onclick="switchTab('tab-home', this)"><i class="fa-solid fa-house"></i> Beranda</li>
+                    <li onclick="switchTab('tab-ewallet', this)"><i class="fa-solid fa-wallet"></i> Top Up E-Wallet</li>
+                    <li onclick="switchTab('tab-game', this)"><i class="fa-solid fa-gamepad"></i> Top Up Game</li>
+                    <li onclick="switchTab('tab-suntik', this)"><i class="fa-solid fa-bullhorn"></i> Push Kontak & Suntik</li>
+                    <li onclick="switchPage('page-landing')" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Keluar</li>
+                </ul>
+            </aside>
+
+            <!-- Konten Dasbor Utama -->
+            <main class="main-content">
+                <header class="dashboard-header">
+                    <h2>Halo, <span>Mitra Pengguna</span> 👋</h2>
+                    <div class="user-saldo">
+                        <span>Saldo: <strong>Rp 500.000</strong></span>
+                        <button class="btn-sm"><i class="fa-solid fa-plus"></i> Top Up</button>
+                    </div>
+                </header>
+
+                <!-- TAB 1: BERANDA / SLIDER -->
+                <div id="tab-home" class="dashboard-tab active">
+                    <!-- Banner 3 Slider Otomatis -->
+                    <div class="slider-container">
+                        <div class="slider-track">
+                            <div class="slide slide-1">
+                                <div class="slide-text">
+                                    <h3>Promo Spesial E-Wallet</h3>
+                                    <p>Cashback hingga 20% untuk semua transaksi DANA & OVO di PT Anugrah Mitra Finansial!</p>
+                                </div>
+                            </div>
+                            <div class="slide slide-2">
+                                <div class="slide-text">
+                                    <h3>Top Up Game Termurah</h3>
+                                    <p>Diskon kilat diamond Free Fire & Mobile Legends tanpa batas waktu.</p>
+                                </div>
+                            </div>
+                            <div class="slide slide-3">
+                                <div class="slide-text">
+                                    <h3>Layanan Suntik Medsos & Push Kontak</h3>
+                                    <p>Tingkatkan engagement dan jangkauan bisnis Anda bersama layanan profesional kami.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slider-dots">
+                            <span class="dot active" onclick="currentSlide(0)"></span>
+                            <span class="dot" onclick="currentSlide(1)"></span>
+                            <span class="dot" onclick="currentSlide(2)"></span>
+                        </div>
+                    </div>
+
+                    <div class="quick-stats">
+                        <div class="stat-card">
+                            <i class="fa-solid fa-receipt"></i>
+                            <div>
+                                <h4>Total Transaksi</h4>
+                                <p>28 Transaksi</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <div>
+                                <h4>Status Akun</h4>
+                                <p class="verified">Mitra Terverifikasi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: TOP UP E-WALLET -->
+                <div id="tab-ewallet" class="dashboard-tab">
+                    <h3>Top Up E-Wallet</h3>
+                    <p class="section-desc">Pilih dompet digital tujuan Anda</p>
+                    <div class="grid-services">
+                        <div class="service-card" onclick="alert('Membuka menu DANA')">
+                            <i class="fa-solid fa-wallet" style="color: #0080ff;"></i>
+                            <h4>DANA</h4>
+                            <p>Instant 24 Jam</p>
+                        </div>
+                        <div class="service-card" onclick="alert('Membuka menu OVO')">
+                            <i class="fa-solid fa-wallet" style="color: #4b306b;"></i>
+                            <h4>OVO</h4>
+                            <p>Instant 24 Jam</p>
+                        </div>
+                        <div class="service-card" onclick="alert('Membuka menu Gopay')">
+                            <i class="fa-solid fa-wallet" style="color: #00a1ff;"></i>
+                            <h4>Gopay</h4>
+                            <p>Instant 24 Jam</p>
+                        </div>
+                        <div class="service-card" onclick="alert('Membuka menu ShopeePay')">
+                            <i class="fa-solid fa-bag-shopping" style="color: #ee4d2d;"></i>
+                            <h4>ShopeePay</h4>
+                            <p>Instant 24 Jam</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: TOP UP GAME -->
+                <div id="tab-game" class="dashboard-tab">
+                    <h3>Top Up Game Populer</h3>
+                    <p class="section-desc">Masukkan ID dan pilih nominal game favoritmu</p>
+                    <div class="grid-services">
+                        <div class="service-card" onclick="alert('Membuka menu Free Fire')">
+                            <i class="fa-solid fa-gamepad" style="color: #ffaa00;"></i>
+                            <h4>Free Fire</h4>
+                            <p>Diamond Resmi</p>
+                        </div>
+                        <div class="service-card" onclick="alert('Membuka menu Mobile Legends')">
+                            <i class="fa-solid fa-gamepad" style="color: #0055ff;"></i>
+                            <h4>Mobile Legends</h4>
+                            <p>Diamond & Starlight</p>
+                        </div>
+                        <div class="service-card" onclick="alert('Membuka menu PUBG Mobile')">
+                            <i class="fa-solid fa-gamepad" style="color: #111111;"></i>
+                            <h4>PUBG Mobile</h4>
+                            <p>Unknown Cash (UC)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: PUSH KONTAK & SUNTIK WEB -->
+                <div id="tab-suntik" class="dashboard-tab">
+                    <h3>Push Kontak & Suntik Web / Medsos</h3>
+                    <p class="section-desc">Layanan automasi dan optimasi digital profesional</p>
+                    <div class="grid-services">
+                        <div class="service-card" onclick="alert('Membuka menu Suntik Followers')">
+                            <i class="fa-solid fa-users" style="color: #28a745;"></i>
+                            <h4>Suntik Followers</h4>
+                            <p>Instagram & TikTok</p>
+                        </div>
+                        <div class="service-card" onclick="alert('Membuka menu Push Kontak WA')">
+                            <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i>
+                            <h4>Push Kontak WA</h4>
+                            <p>Broadcast & Database</p>
+                        </div>
+                        <div class="service-card" onclick="alert('Membuka menu Auto Views')">
+                            <i class="fa-solid fa-eye" style="color: #dc3545;"></i>
+                            <h4>Auto Views Video</h4>
+                            <p>Reels & Shorts</p>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

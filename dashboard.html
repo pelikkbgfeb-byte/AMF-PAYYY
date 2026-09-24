@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    <title>AMF PAY</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        body.app-body { background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .app-container { width: 100%; max-width: 480px; background: #f8f9fa; min-height: 100vh; height: 100vh; box-shadow: 0 0 30px rgba(0,0,0,0.08); position: relative; display: flex; flex-direction: column; overflow: hidden; }
+        
+        .app-header { background: linear-gradient(135deg, #4e54c8, #8f94fb); color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .user-profile-info { display: flex; align-items: center; gap: 12px; }
+        .avatar-circle { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; }
+        .greeting { font-size: 0.75rem; opacity: 0.85; display: block; }
+        .user-profile-info h3 { font-size: 0.95rem; font-weight: 700; color: #fff; }
+
+        .wallet-dual-section { padding: 14px 16px 0 16px; flex-shrink: 0; display: flex; gap: 10px; }
+        .wallet-card-mini { background: #fff; border-radius: 14px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .wallet-card-mini span { font-size: 0.7rem; color: #64748b; font-weight: 600; display: block; margin-bottom: 2px; }
+        .wallet-card-mini h3 { font-size: 1.1rem; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
+        .wallet-card-mini .mini-btn { background: #4e54c8; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 0.7rem; cursor: pointer; text-align: center; }
+        .wallet-card-mini.merchant-card { border-color: #cbd5e1; background: #fafafa; }
+        .wallet-card-mini.merchant-card .mini-btn { background: #00509d; }
+
+        .app-content { padding: 16px; flex-grow: 1; overflow-y: auto; padding-bottom: 90px; }
+        .app-tab { display: none; }
+        .app-tab.active { display: block; }
+
+        .merchant-form-container { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; }
+        .form-title-sec { font-size: 0.95rem; font-weight: 700; color: #4e54c8; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .form-group-app { margin-bottom: 12px; }
+        .form-group-app label { display: block; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 5px; }
+        .form-control-app { width: 100%; padding: 10px 12px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.82rem; color: #1e293b; background: #fff; outline: none; transition: 0.2s; }
+        .form-control-app:focus { border-color: #4e54c8; }
+        
+        .review-banner-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 16px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px; }
+        .review-banner-box i { color: #2563eb; font-size: 1.2rem; margin-top: 2px; }
+        .review-banner-box h4 { font-size: 0.88rem; font-weight: 700; color: #1e40af; margin-bottom: 2px; }
+        .review-banner-box p { font-size: 0.75rem; color: #3b82f6; line-height: 1.4; }
+
+        /* PERBAIKAN POSISI ZOOM QRIS AGAR LURUS & DI TENGAH */
+        .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .custom-modal-overlay.active { display: flex; }
+        .custom-modal-card { background: #fff; border-radius: 16px; width: 100%; max-width: 360px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .custom-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .custom-modal-header h4 { font-size: 0.95rem; font-weight: 700; color: #1e293b; margin: 0; }
+        .custom-modal-header button { background: none; border: none; font-size: 1.1rem; color: #64748b; cursor: pointer; }
+        
+        .zoom-qr-body { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; width: 100%; }
+        .zoom-qr-body img { display: block; margin: 0 auto; max-width: 100%; height: auto; object-fit: contain; }
+
+        .struk-receipt-body { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .struk-qr-preview { display: flex; justify-content: center; align-items: center; margin: 10px 0; width: 100%; }
+        .struk-qr-preview img { display: block; margin: 0 auto; max-width: 100%; height: auto; object-fit: contain; }
+
+        /* NAVIGASI BAWAH ABSOLUT */
+        .bottom-nav-5 { position: absolute; bottom: 0; left: 0; width: 100%; height: 68px; background: #ffffff; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; z-index: 100; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 0 5px; flex-shrink: 0; }
+        .nav-item-5 { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: #64748b; cursor: pointer; flex: 1; height: 100%; font-size: 0.6rem; font-weight: 600; background: none; border: none; }
+        .nav-item-5 i { font-size: 1.05rem; }
+        .nav-item-5.active { color: #4e54c8; }
+        
+        .center-merchant-nav { position: relative; top: -12px; display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; }
+        .merchant-floating-badge { width: 48px; height: 48px; background: #4e54c8; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; box-shadow: 0 4px 12px rgba(78,84,200,0.4); border: 3px solid #fff; }
+        .merchant-svg-icon { width: 22px; height: 22px; fill: #fff; }
+        .center-merchant-nav span { margin-top: 2px; font-weight: 700; color: #4e54c8; font-size: 0.6rem; }
+
+        .app-notification-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #1e293b; color: #fff; padding: 10px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; z-index: 1000; transition: transform 0.3s ease; font-size: 0.78rem; font-weight: 600; }
+        .app-notification-toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body class="app-body">
+
+    <div class="app-container">
+
+        <div id="top-wallet-header-wrapper">
+            <header class="app-header">
+                <div class="user-profile-info">
+                    <div class="avatar-circle"><i class="fa-solid fa-user-shield"></i></div>
+                    <div>
+                        <span class="greeting">Selamat Datang,</span>
+                        <h3>Mitra AMF PAY</h3>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="showNotification('Tidak ada notifikasi')"><i class="fa-regular fa-bell"></i></button>
+                </div>
+            </header>
+
+            <div class="wallet-dual-section">
+                <div class="wallet-card-mini">
+                    <span>Saldo Utama</span>
+                    <h3 id="saldo-text">Rp 0</h3>
+                    <button class="mini-btn" onclick="openTopupPage()"><i class="fa-solid fa-plus-circle"></i> Isi Saldo</button>
+                </div>
+                <div class="wallet-card-mini merchant-card">
+                    <span>Saldo Merchant</span>
+                    <h3 id="saldo-merchant-text">Rp 0</h3>
+                    <button class="mini-btn" onclick="handleMerchantNavClick()">Buka Toko</button>
+                </div>
+            </div>
+        </div>
+
+        <main class="app-content">
+
+            <div id="tab-home" class="app-tab active">
+                <div class="slider-container">
+                    <div class="slider-track">
+                        <div class="slide slide-1"><div class="slide-text"><h3>Promo Cashback DANA & OVO</h3><p>Cashback 20% setiap transaksi e-wallet!</p></div></div>
+                        <div class="slide slide-2"><div class="slide-text"><h3>Top Up Game Termurah</h3><p>Diamond Free Fire & ML kilat anti-pending.</p></div></div>
+                        <div class="slide slide-3"><div class="slide-text"><h3>Suntik Medsos & Push Kontak</h3><p>Tingkatkan engagement akun bisnis Anda.</p></div></div>
+                    </div>
+                    <div class="slider-dots">
+                        <span class="dot active" onclick="currentSlide(0)"></span>
+                        <span class="dot" onclick="currentSlide(1)"></span>
+                        <span class="dot" onclick="currentSlide(2)"></span>
+                    </div>
+                </div>
+
+                <div class="section-heading"><h4>Menu Layanan PPOB</h4></div>
+                <div class="shortcut-grid layanan-grid">
+                    <div class="shortcut-item" onclick="openEwalletMenu('Bebas Nominal')">
+                        <div class="sc-icon" style="background: rgba(78,84,200,0.1); color: var(--primary);"><i class="fa-solid fa-money-bill-wave"></i></div>
+                        <span>Bebas Nominal</span>
+                    </div>
+                    <div class="shortcut-item" onclick="openEwalletMenu('DANA')">
+                        <div class="sc-icon svg-box" style="background: rgba(0,132,255,0.1);"><svg viewBox="0 0 100 40" class="ewallet-svg-sm"><text x="5" y="28" font-size="24" font-weight="bold" fill="#0084ff">DANA</text></svg></div>
+                        <span>DANA</span>
+                    </div>
+                    <div class="shortcut-item" onclick="openEwalletMenu('OVO')">
+                        <div class="sc-icon svg-box" style="background: rgba(76,40,130,0.1);"><svg viewBox="0 0 100 40" class="ewallet-svg-sm"><text x="12" y="28" font-size="24" font-weight="bold" fill="#4c2882">OVO</text></svg></div>
+                        <span>OVO</span>
+                    </div>
+                    <div class="shortcut-item" onclick="openEwalletMenu('Gopay')">
+                        <div class="sc-icon svg-box" style="background: rgba(0,170,19,0.1);"><svg viewBox="0 0 100 40" class="ewallet-svg-sm"><text x="2" y="28" font-size="20" font-weight="bold" fill="#00aa13">GOPAY</text></svg></div>
+                        <span>Gopay</span>
+                    </div>
+                    <div class="shortcut-item" onclick="openEwalletMenu('ShopeePay')">
+                        <div class="sc-icon svg-box" style="background: rgba(238,77,45,0.1);"><svg viewBox="0 0 100 40" class="ewallet-svg-sm"><text x="2" y="26" font-size="14" font-weight="bold" fill="#ee4d2d">SHOPEEPAY</text></svg></div>
+                        <span>ShopeePay</span>
+                    </div>
+                    <div class="shortcut-item" onclick="showNotification('Top Up Game')">
+                        <div class="sc-icon" style="background: rgba(255,170,0,0.1); color: #ffaa00;"><i class="fa-solid fa-gamepad"></i></div>
+                        <span>Top Up Game</span>
+                    </div>
+                    <div class="shortcut-item" onclick="showNotification('Suntik Web')">
+                        <div class="sc-icon" style="background: rgba(40,167,69,0.1); color: #28a745;"><i class="fa-solid fa-bullhorn"></i></div>
+                        <span>Suntik Web</span>
+                    </div>
+                    <div class="shortcut-item" onclick="showNotification('Push Kontak')">
+                        <div class="sc-icon" style="background: rgba(220,53,69,0.1); color: #dc3545;"><i class="fa-solid fa-share-nodes"></i></div>
+                        <span>Push Kontak</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB MERCHANT -->
+            <div id="tab-merchant" class="app-tab">
+                <div id="merchant-unregistered-view">
+                    <div class="merchant-form-container">
+                        <div class="form-title-sec"><i class="fa-solid fa-store"></i> Formulir Pendaftaran Merchant</div>
+                        <div class="form-group-app">
+                            <label>Nama Bisnis / Toko</label>
+                            <input type="text" id="reg-nama-toko" class="form-control-app" placeholder="Contoh: Toko Berkah Jaya">
+                        </div>
+                        <div class="form-group-app">
+                            <label>Bidang Usaha</label>
+                            <select id="reg-bidang" class="form-control-app">
+                                <option value="Kuliner & Makanan (F&B)">Kuliner & Makanan (F&B)</option>
+                                <option value="Toko Kelontong & Sembako">Toko Kelontong & Sembako</option>
+                                <option value="Elektronik & Gadget">Elektronik & Gadget</option>
+                                <option value="Fashion & Pakaian">Fashion & Pakaian</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="form-group-app">
+                            <label>Alamat Lengkap</label>
+                            <input type="text" id="reg-alamat" class="form-control-app" placeholder="Masukkan alamat toko">
+                        </div>
+                        <button class="btn-primary-app full-width" onclick="submitMerchantRegistration()" style="margin-top: 10px; width:100%; padding:12px; background:#4e54c8; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Daftar & Kirim Tinjauan</button>
+                    </div>
+                </div>
+
+                <div id="merchant-registered-view" style="display: none;">
+                    <div id="merchant-review-banner" class="review-banner-box" style="display: none;">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <div>
+                            <h4>Akun Dalam Tinjauan 24 Jam</h4>
+                            <p id="review-timer-text">Data profil Anda sedang diverifikasi sistem secara real-time.</p>
+                        </div>
+                    </div>
+
+                    <div id="merchant-active-menu" style="display: none;">
+                        <div class="symmetric-main-box" style="text-align: center; background: #fff; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                            <h3 id="display-store-name" style="font-size: 1.2rem; font-weight: 800; color: #1e293b; margin-bottom: 4px;">Toko Anda</h3>
+                            <p style="font-size: 0.78rem; color: #64748b; margin-bottom: 16px;">NMID : ID1026539727622 • Status Aktif</p>
+                            <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px; display: inline-block; margin-bottom: 16px;">
+                                <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="1.5">
+                                    <path d="M2 2h8v8H2zM14 2h8v8h-8zM2 14h8v8H2z" fill="#1e293b"/>
+                                    <rect x="14" y="14" width="3" height="3" fill="#1e293b"/>
+                                    <rect x="19" y="14" width="3" height="3" fill="#1e293b"/>
+                                    <rect x="14" y="19" width="3" height="3" fill="#1e293b"/>
+                                    <rect x="19" y="19" width="3" height="3" fill="#1e293b"/>
+                                    <path d="M6 6h0.01M18 6h0.01M6 18h0.01M12 12h0.01M15 11h2M11 15v2M12 18h2"/>
+                                </svg>
+                                <div style="font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; margin-top: 4px;">QRIS RESMI</div>
+                            </div>
+                            <button class="btn-primary-app full-width" onclick="showNotification('QRIS siap dibagikan')" style="width:100%; padding:12px; background:#4e54c8; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Bagikan QRIS</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    <!-- TAB TOPUP SALDO (KOTAK QR DI ATAS SUDAH DIHAPUS, FORM LEBIH RAPAT & BERTAHAP 10k-100k) -->
+            <div id="tab-topup-saldo" class="app-tab">
+                <div class="section-heading" style="margin-bottom: 12px;">
+                    <h3>Deposit Saldo via QRIS</h3>
+                    <p class="section-subtext">Scan QRIS dengan fee murni secara real-time</p>
+                </div>
+
+                <div class="symmetric-main-box" style="background: #fff; padding: 16px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                    
+                    <div class="form-group-app" style="margin-bottom: 12px;">
+                        <label>Masukkan Nominal Deposit (Rp)</label>
+                        <input type="number" placeholder="Contoh: 50000" id="topup-nominal-input" oninput="calculateGatewayFee()" class="form-control-app">
+                    </div>
+
+                    <!-- TOMBOL NOMINAL BERTAHAP (10rb, 20rb, 50rb, 100rb) -->
+                    <div class="quick-nominal-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px;">
+                        <button type="button" onclick="setTopupNominal(10000)" class="mini-btn" style="padding: 8px 4px; background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">10rb</button>
+                        <button type="button" onclick="setTopupNominal(20000)" class="mini-btn" style="padding: 8px 4px; background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">20rb</button>
+                        <button type="button" onclick="setTopupNominal(50000)" class="mini-btn" style="padding: 8px 4px; background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">50rb</button>
+                        <button type="button" onclick="setTopupNominal(100000)" class="mini-btn" style="padding: 8px 4px; background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">100rb</button>
+                    </div>
+
+                    <div class="symmetric-summary-box" style="background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 15px; font-size: 0.8rem;">
+                        <div class="sym-row" style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>Nominal Deposit</span><strong id="summary-nominal">Rp 0</strong></div>
+                        <div class="sym-row" style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>Fee QRIS (0.3%)</span><strong id="summary-fee">Rp 0</strong></div>
+                        <div class="sym-divider" style="height: 1px; background: #cbd5e1; margin: 8px 0;"></div>
+                        <div class="sym-row sym-total-row" style="display: flex; justify-content: space-between; font-weight: 800; color: #4e54c8;"><span>Total Pembayaran</span><strong id="summary-total">Rp 0</strong></div>
+                    </div>
+
+                    <button class="btn-primary-app full-width" onclick="processTopupAutomatic()" style="width: 100%; padding: 12px; background: #4e54c8; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Konfirmasi & Bayar QRIS</button>
+                </div>
+            </div>
+
+            <div id="tab-ewallet-menu" class="app-tab">
+                <div class="section-heading">
+                    <h3 id="ewallet-title-text">Layanan E-Wallet</h3>
+                    <p class="section-subtext">Masukkan nomor tujuan dan nominal</p>
+                </div>
+                <div class="symmetric-main-box">
+                    <div class="form-group-app"><label id="ewallet-label">Nomor Tujuan / HP</label><input type="text" placeholder="Contoh: 081234567890" id="ewallet-phone" class="form-control-app"></div>
+                    <div class="form-group-app"><label>Nominal Transaksi (Rp)</label><input type="number" placeholder="Masukkan nominal" id="ewallet-nominal" class="form-control-app"></div>
+                    <button class="btn-primary-app full-width" onclick="simulateEwalletTopup()" style="width: 100%; padding: 12px; background: #4e54c8; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Proses Transaksi</button>
+                </div>
+            </div>
+
+            <div id="tab-transaksi" class="app-tab">
+                <div class="section-heading">
+                    <h3>Riwayat Transaksi</h3>
+                    <p class="section-subtext">Catatan aktivitas real-time Anda</p>
+                </div>
+                <div class="transaction-list" id="transaction-container">
+                    <div class="empty-trx" id="empty-trx-text" style="text-align: center; color: #a0aec0; padding: 25px 0; font-size: 0.85rem;">Belum ada catatan transaksi.</div>
+                </div>
+            </div>
+
+            <div id="tab-profil" class="app-tab">
+                <div class="profile-card-section" style="text-align: center; padding: 20px; background: #fff; border-radius: 16px; margin-bottom: 15px;">
+                    <div class="profile-avatar-large" style="width: 60px; height: 60px; background: #4e54c8; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 10px auto;"><i class="fa-solid fa-user-shield"></i></div>
+                    <h3 style="margin: 0; font-size: 1rem;">Mitra AMF PAY</h3>
+                    <p style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">mitra.amfpay@gmail.com • Terverifikasi</p>
+                </div>
+                <div class="profile-menu-list" style="background: #fff; border-radius: 16px; overflow: hidden;">
+                    <div class="p-menu-item" onclick="showNotification('Pengaturan Akun')" style="padding: 14px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 0.85rem;"><i class="fa-solid fa-user-gear" style="color: #4e54c8;"></i><span style="flex-grow: 1;">Pengaturan Akun</span><i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 0.75rem;"></i></div>
+                    <div class="p-menu-item logout-item" onclick="location.href='index.html'" style="padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 0.85rem; color: #ef4444;"><i class="fa-solid fa-right-from-bracket"></i><span style="flex-grow: 1;">Keluar Aplikasi</span><i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 0.75rem;"></i></div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- MODAL ZOOM QRIS (DIPERBAIKI AGAR LURUS DI TENGAH) -->
+        <div id="modal-zoom-qr" class="custom-modal-overlay">
+            <div class="custom-modal-card zoom-qr-card">
+                <div class="custom-modal-header"><h4>QRIS Full Screen</h4><button onclick="closeZoomQrModal()"><i class="fa-solid fa-xmark"></i></button></div>
+                <div class="zoom-qr-body" id="zoom-qr-image-box"></div>
+                <p style="font-size: 0.72rem; color: #718096; text-align: center; margin-top: 10px;">Screenshot QRIS di atas untuk membayar.</p>
+            </div>
+        </div>
+
+        <!-- MODAL STRUK (DIPERBAIKI AGAR LURUS DI TENGAH) -->
+        <div id="modal-struk-receipt" class="custom-modal-overlay">
+            <div class="custom-modal-card struk-card">
+                <div class="custom-modal-header"><h4>Struk Rincian Deposit</h4><button onclick="closeStrukModal()"><i class="fa-solid fa-xmark"></i></button></div>
+                <div class="struk-receipt-body">
+                    <div class="struk-brand" id="struk-store-brand-title" style="font-weight: 700; font-size: 0.9rem; color: #1e293b;">Rincian Pembayaran QRIS</div>
+                    <div class="struk-date" id="struk-date-time" style="font-size: 0.7rem; color: #64748b; margin-bottom: 8px;">23 Sep 2026, 20:17 WITA</div>
+                    <div class="struk-qr-preview" id="struk-qr-box"></div>
+                    <p class="struk-scan-hint" style="font-size: 0.72rem; color: #64748b; margin: 6px 0;">Scan QR untuk membayar</p>
+                    <div class="struk-divider" style="width: 100%; height: 1px; background: #e2e8f0; margin: 10px 0;"></div>
+                    <div class="struk-row" style="display: flex; justify-content: space-width; width: 100%; font-size: 0.78rem; margin-bottom: 4px;"><span style="color: #64748b;">ID Transaksi</span><strong id="struk-trx-id">AMF264140</strong></div>
+                    <div class="struk-row" style="display: flex; justify-content: space-width; width: 100%; font-size: 0.78rem; margin-bottom: 4px;"><span style="color: #64748b;">Metode</span><strong>QRIS All Payment</strong></div>
+                    <div class="struk-row" style="display: flex; justify-content: space-width; width: 100%; font-size: 0.78rem; margin-bottom: 4px;"><span style="color: #64748b;">Nominal Deposit</span><strong id="struk-nominal">Rp 0</strong></div>
+                    <div class="struk-row" style="display: flex; justify-content: space-width; width: 100%; font-size: 0.78rem; margin-bottom: 10px;"><span style="color: #64748b;">Fee QRIS (0.3%)</span><strong id="struk-fee">Rp 0</strong></div>
+                    <div class="struk-divider" style="width: 100%; height: 1px; background: #e2e8f0; margin: 6px 0;"></div>
+                    <div class="sym-row total-struk" style="display: flex; justify-content: space-between; width: 100%; font-size: 0.85rem; font-weight: 800; color: #1e293b; margin-bottom: 12px;"><span>Total Tagihan</span><strong id="summary-total-struk">Rp 0</strong></div>
+                    <div class="struk-status-box status-pending" id="struk-status-box-id" style="width: 100%; padding: 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; background: #fef3c7; color: #d97706; text-align: center;">STATUS: PENDING (MENUNGGU PEMBAYARAN)</div>
+                </div>
+                <button class="btn-primary-app full-width" id="struk-action-btn" onclick="closeStrukModal()" style="width: 100%; padding: 10px; background: #10b981; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 12px; display: none;">Tutup & Saldo Masuk</button>
+            </div>
+        </div>
+
+        <div id="app-notification" class="app-notification-toast"><i class="fa-solid fa-circle-info"></i><span id="toast-message">Notif</span></div>
+
+        <!-- NAVIGASI BAWAH -->
+        <nav class="bottom-nav-5">
+            <div class="nav-item-5 active" onclick="switchAppTabCustom('tab-home', this)"><i class="fa-solid fa-house"></i><span>Home</span></div>
+            <div class="nav-item-5" onclick="switchAppTabCustom('tab-transaksi', this)"><i class="fa-solid fa-receipt"></i><span>Transaksi</span></div>
+            <div class="nav-item-5 center-merchant-nav" onclick="handleMerchantNavClick()">
+                <div class="merchant-floating-badge"><svg viewBox="0 0 24 24" class="merchant-svg-icon" fill="currentColor"><path d="M20 4H4v2h16V4m1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1M6 18v-4h6v4H6z"/></svg></div>
+                <span>Merchant</span>
+            </div>
+            <div class="nav-item-5" onclick="switchAppTabCustom('tab-topup-saldo', this)"><i class="fa-solid fa-wallet"></i><span>Isi Saldo</span></div>
+            <div class="nav-item-5" onclick="switchAppTabCustom('tab-profil', this)"><i class="fa-solid fa-user"></i><span>Profil</span></div>
+        </nav>
+
+    </div>
+    <script src="script.js"></script>
+    <script>
+        function formatRupiahReal(angka) {
+            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function updateDualWalletDisplay() {
+            let utama = parseInt(localStorage.getItem('amf_saldo_utama')) || 0;
+            let merchant = parseInt(localStorage.getItem('amf_saldo_bisnis')) || 0;
+            
+            const saldoEl = document.getElementById('saldo-text');
+            const merchantEl = document.getElementById('saldo-merchant-text');
+            if(saldoEl) saldoEl.textContent = formatRupiahReal(utama);
+            if(merchantEl) merchantEl.textContent = formatRupiahReal(merchant);
+        }
+
+        function switchAppTabCustom(tabId, el) {
+            const topHeader = document.getElementById('top-wallet-header-wrapper');
+            if (tabId === 'tab-home') {
+                topHeader.style.display = 'block';
+            } else {
+                topHeader.style.display = 'none';
+            }
+
+            if (typeof switchAppTab === 'function') {
+                switchAppTab(tabId, el);
+            } else {
+                document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.nav-item-5').forEach(n => n.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+                if(el) el.classList.add('active');
+            }
+            updateDualWalletDisplay();
+        }
+
+        function handleMerchantNavClick() {
+            document.getElementById('top-wallet-header-wrapper').style.display = 'none';
+            
+            document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item-5').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById('tab-merchant').classList.add('active');
+            document.querySelector('.center-merchant-nav').classList.add('active');
+            
+            checkMerchantRealtimeStatus();
+        }
+
+        function submitMerchantRegistration() {
+            const namaToko = document.getElementById('reg-nama-toko').value.trim();
+            const alamat = document.getElementById('reg-alamat').value.trim();
+            const bidang = document.getElementById('reg-bidang').value;
+
+            if(!namaToko || !alamat) {
+                showNotification('Harap isi Nama Toko dan Alamat dengan lengkap!');
+                return;
+            }
+
+            localStorage.setItem('amf_merchant_store', namaToko);
+            localStorage.setItem('amf_merchant_alamat', alamat);
+            localStorage.setItem('amf_merchant_bidang', bidang);
+            localStorage.setItem('amf_merchant_reg_time', Date.now());
+
+            showNotification('Pendaftaran berhasil! Akun masuk masa tinjauan.');
+            checkMerchantRealtimeStatus();
+        }
+
+        function checkMerchantRealtimeStatus() {
+            const savedStore = localStorage.getItem('amf_merchant_store');
+            const regTime = parseInt(localStorage.getItem('amf_merchant_reg_time')) || 0;
+            const now = Date.now();
+            const twentyFourHours = 24 * 60 * 60 * 1000;
+
+            const unregisteredView = document.getElementById('merchant-unregistered-view');
+            const registeredView = document.getElementById('merchant-registered-view');
+            const reviewBanner = document.getElementById('merchant-review-banner');
+            const activeMenu = document.getElementById('merchant-active-menu');
+
+            if (!savedStore) {
+                unregisteredView.style.display = 'block';
+                registeredView.style.display = 'none';
+            } else {
+                unregisteredView.style.display = 'none';
+                registeredView.style.display = 'block';
+
+                const elapsed = now - regTime;
+                if (elapsed < twentyFourHours) {
+                    reviewBanner.style.display = 'flex';
+                    activeMenu.style.display = 'none';
+
+                    const remainingMs = twentyFourHours - elapsed;
+                    const hoursLeft = Math.floor(remainingMs / (1000 * 60 * 60));
+                    const minsLeft = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    document.getElementById('review-timer-text').textContent = 
+                        `Data diverifikasi. Sisa waktu tinjauan: ${hoursLeft} jam ${minsLeft} menit lagi.`;
+                } else {
+                    reviewBanner.style.display = 'none';
+                    activeMenu.style.display = 'block';
+                    document.getElementById('display-store-name').textContent = savedStore;
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateDualWalletDisplay();
+        });
+
+        setInterval(() => {
+            updateDualWalletDisplay();
+            if (document.getElementById('tab-merchant').classList.contains('active')) {
+                checkMerchantRealtimeStatus();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

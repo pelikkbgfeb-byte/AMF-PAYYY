@@ -1,0 +1,476 @@
+/* RESET & VARIABEL */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --primary: #4e54c8;
+    --primary-hover: #3f44a8;
+    --secondary: #8f94fb;
+    --bg-dark: #0f1020;
+    --bg-light: #f8f9fa;
+    --text-color: #333333;
+    --white: #ffffff;
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+/* SISTEM TRANSISI HALAMAN */
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: var(--transition);
+    pointer-events: none;
+}
+
+.page.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+    position: relative;
+}
+
+/* NAVBAR LANDING */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 5%;
+    background: var(--white);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.custom-logo-svg {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    animation: pulseLogo 3s infinite alternate;
+}
+
+.brand-text-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--bg-dark);
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+}
+
+.brand-sub {
+    font-size: 0.7rem;
+    color: #777;
+    font-weight: 500;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* TOMBOL */
+button {
+    cursor: pointer;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 84, 200, 0.3);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.btn-glow {
+    animation: glowEffect 2s infinite alternate;
+}
+
+/* HERO SECTION & ILUSI GAMBAR BERGERAK */
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 40px 6%;
+    gap: 30px;
+}
+
+.hero-content {
+    max-width: 600px;
+}
+
+.hero-content h1 {
+    font-size: 2.2rem;
+    line-height: 1.25;
+    color: var(--bg-dark);
+    margin-bottom: 15px;
+}
+
+.hero-content h1 span {
+    color: var(--primary);
+}
+
+.hero-content p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Efek Ilusi Gambar Bergerak CSS Murni */
+.hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 280px;
+    height: 280px;
+}
+
+.optical-illusion-box {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ring {
+    position: absolute;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    animation: rotateIllusion 10s linear infinite;
+}
+
+.r1 {
+    width: 220px;
+    height: 220px;
+    border-top-color: var(--primary);
+    border-bottom-color: var(--primary);
+    animation-duration: 8s;
+}
+
+.r2 {
+    width: 160px;
+    height: 160px;
+    border-left-color: var(--secondary);
+    border-right-color: var(--secondary);
+    animation-duration: 6s;
+    animation-direction: reverse;
+}
+
+.r3 {
+    width: 100px;
+    height: 100px;
+    border-top-color: #ff416c;
+    border-bottom-color: #ff416c;
+    animation-duration: 4s;
+}
+
+.center-core {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--white);
+    font-size: 1.3rem;
+    box-shadow: 0 0 25px rgba(78, 84, 200, 0.6);
+    animation: pulseCore 2s ease-in-out infinite alternate;
+}
+
+/* BAGIAN ARTIKEL & INFORMASI (FIXED GRID DI HP & DESKTOP) */
+.articles-section {
+    padding: 50px 6%;
+    background: #f1f3f9;
+}
+
+.section-title-center {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 35px auto;
+}
+
+.section-title-center h2 {
+    font-size: 1.6rem;
+    color: var(--bg-dark);
+    margin-bottom: 10px;
+}
+
+.section-title-center p {
+    color: #666;
+    font-size: 0.88rem;
+    line-height: 1.4;
+}
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Default 1 kolom di HP agar tidak hancur */
+    gap: 20px;
+}
+
+/* Otomatis menjadi grid 2-3 kolom jika layar lebih besar */
+@media (min-width: 768px) {
+    .articles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .hero-section {
+        flex-direction: row;
+        text-align: left;
+        justify-content: space-between;
+        padding: 60px 8%;
+    }
+    .hero-content h1 {
+        font-size: 2.8rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .articles-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.article-card {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(78, 84, 200, 0.12);
+    border-color: var(--primary);
+}
+
+.article-img {
+    height: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--white);
+    font-size: 2.5rem;
+}
+
+.i-1 { background: linear-gradient(135deg, #11998e, #38ef7d); }
+.i-2 { background: linear-gradient(135deg, #4e54c8, #8f94fb); }
+.i-3 { background: linear-gradient(135deg, #f857a6, #ff5858); }
+.i-4 { background: linear-gradient(135deg, #3a7bd5, #3a6073); }
+.i-5 { background: linear-gradient(135deg, #f2994a, #f2c94c); }
+.i-6 { background: linear-gradient(135deg, #833ab4, #fd1d1d); }
+
+.article-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.article-tag {
+    display: inline-block;
+    background: rgba(78, 84, 200, 0.1);
+    color: var(--primary);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    width: max-content;
+}
+
+.article-body h3 {
+    font-size: 1.05rem;
+    color: var(--bg-dark);
+    margin-bottom: 8px;
+    line-height: 1.35;
+}
+
+.article-body p {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.45;
+    flex-grow: 1;
+}
+
+.read-more {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition);
+}
+
+.read-more:hover {
+    gap: 10px;
+}
+
+.landing-footer {
+    text-align: center;
+    padding: 25px;
+    background: var(--bg-dark);
+    color: #aaa;
+    font-size: 0.85rem;
+}
+
+/* HALAMAN AUTENTIKASI (LOGIN & DAFTAR) */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    padding: 20px;
+}
+
+.auth-card {
+    background: var(--white);
+    padding: 35px 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-card h2 {
+    margin-bottom: 8px;
+    color: var(--bg-dark);
+    font-size: 1.3rem;
+}
+
+.auth-card p {
+    color: #777;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 11px 15px 11px 42px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.input-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(78, 84, 200, 0.1);
+}
+
+.full-width {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.auth-switch {
+    margin-top: 18px;
+    font-size: 0.85rem;
+}
+
+.auth-switch a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-back {
+    background: transparent;
+    color: #666;
+    margin-top: 12px;
+    font-size: 0.8rem;
+}
+
+.btn-back:hover {
+    color: var(--primary);
+}
+
+/* ANIMASI KEYFRAMES */
+@keyframes rotateIllusion {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseCore {
+    0% { transform: scale(0.95); box-shadow: 0 0 15px rgba(78, 84, 200, 0.4); }
+    100% { transform: scale(1.05); box-shadow: 0 0 35px rgba(78, 84, 200, 0.8); }
+}
+
+@keyframes pulseLogo {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.06); }
+}
